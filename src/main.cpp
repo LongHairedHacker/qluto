@@ -17,6 +17,8 @@ int main(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
 
+    qRegisterMetaType<std::vector<float>>("std::vector<float>");
+
     QApplication app(argc, argv);
     qmlRegisterType<Waterfall>("HamTools", 1, 0, "Waterfall");
 

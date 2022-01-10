@@ -12,7 +12,7 @@ pluto::pluto(fft* fourier) {
     //baseQrgRx = 432'600'000;
     qDebug() << "baseQrgRx = " << baseQrgRx;
     baseQrgTx = double(2'400'000UL - 30UL);
-    bandwidthRx = 1'000'000; 
+    bandwidthRx = 1'000'000;
     bandwidthTx =   100'000;
     rxBuffer = nullptr;
     txBuffer = nullptr;
@@ -31,7 +31,7 @@ iio_context* pluto::getContext(iio_scan_context *scanContext) {
     if(ret <= 0) {
         std::cout << "Unable to detect device" << std::endl;
         return nullptr;
-    } else if (ret == 1) {
+    } else if (ret >= 1) {
         std::cout << "Device found: " << iio_context_info_get_uri(info[0]) << std::endl;
         return iio_create_context_from_uri(iio_context_info_get_uri(info[0]));
     } else {
@@ -40,17 +40,17 @@ iio_context* pluto::getContext(iio_scan_context *scanContext) {
     }
 }
 
-iio_device* pluto::getDevice(iio_context* context) 
+iio_device* pluto::getDevice(iio_context* context)
 {
     return iio_context_find_device(context, "ad9361-phy");
 }
 
-bool pluto::getStreamDevice(iio_context *context, iodev d, iio_device **device) 
+bool pluto::getStreamDevice(iio_context *context, iodev d, iio_device **device)
 {
     if(d == TX) {
         *device = iio_context_find_device(context, "cf-ad9361-dds-core-lpc");
         return *device != nullptr;
-    } else if (d == RX) { 
+    } else if (d == RX) {
         *device = iio_context_find_device(context, "cf-ad9361-lpc");
         return *device != nullptr;
     }
@@ -65,7 +65,7 @@ bool pluto::getStreamChannel(iio_context *context, iodev d, iio_device *device, 
 }
 
 // Finds AD9361 phy IIO configuration channel with id chid
-bool pluto::getPhyConfigChannel(iio_context *context, iodev d, int chid, iio_channel **channel) 
+bool pluto::getPhyConfigChannel(iio_context *context, iodev d, int chid, iio_channel **channel)
 {
     if(d == RX) {
         *channel = iio_device_find_channel(getDevice(context), getChannelName("voltage", chid).c_str(), false);
@@ -77,20 +77,20 @@ bool pluto::getPhyConfigChannel(iio_context *context, iodev d, int chid, iio_cha
     return false;
 }
 
-// Finds AD9361 local oscillator IIO configuration channels 
-bool pluto::getLocalOscillatorChannel(iio_context *context, iodev d, iio_channel **channel) 
+// Finds AD9361 local oscillator IIO configuration channels
+bool pluto::getLocalOscillatorChannel(iio_context *context, iodev d, iio_channel **channel)
 {
     if(d == RX) {
         *channel = iio_device_find_channel(getDevice(context), getChannelName("altvoltage", 0).c_str(), true);
         return *channel != NULL;
     } else if (d == TX) {
-        *channel = iio_device_find_channel(getDevice(context), getChannelName("altvoltage", 1).c_str(), true); 
+        *channel = iio_device_find_channel(getDevice(context), getChannelName("altvoltage", 1).c_str(), true);
         return *channel != NULL;
     }
     return false;
 }
 
-std::string pluto::getChannelNameModify(const char* type, int id, char modify) 
+std::string pluto::getChannelNameModify(const char* type, int id, char modify)
 {
     std::stringstream ss;
     ss << type << id << "_" << modify;
@@ -113,7 +113,7 @@ void pluto::writeToChannel(iio_channel *channel, std::string what, int64_t val)
     iio_channel_attr_write_longlong(channel, what.c_str(), val);
 }
 
-std::string pluto::getChannelName(const char* type, int id) 
+std::string pluto::getChannelName(const char* type, int id)
 {
     std::stringstream ss;
     ss << type << id;

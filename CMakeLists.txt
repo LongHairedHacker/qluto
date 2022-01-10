@@ -9,7 +9,7 @@ execute_process(COMMAND sh build_liquid-dsp.sh
 )
 
 # Configuration:
-set(CMAKE_CXX_STANDARD 11 CACHE STRING "C++ Version")
+set(CMAKE_CXX_STANDARD 14 CACHE STRING "C++ Version")
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOUIC ON)
@@ -45,7 +45,8 @@ target_include_directories(qluto
 target_link_libraries(qluto
     PRIVATE iio
     PRIVATE ad9361
-    PRIVATE ${CMAKE_CURRENT_LIST_DIR}/build/lib/liquid-dsp/lib/libliquid.ar
+    #PRIVATE ${LIQUID_DSP}
+    PRIVATE ${CMAKE_CURRENT_LIST_DIR}/build/lib/liquid-dsp/lib/libliquid.a
     PRIVATE Qt${QT_VERSION_MAJOR}::Core
     PRIVATE Qt${QT_VERSION_MAJOR}::Quick
     PRIVATE Qt${QT_VERSION_MAJOR}::Widgets
